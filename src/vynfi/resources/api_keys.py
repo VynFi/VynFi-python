@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, List, Optional
 
 from .._client import SyncClient
 from .._types import ApiKey, ApiKeyCreated
@@ -18,8 +18,8 @@ class ApiKeys:
         self,
         *,
         name: str,
-        scopes: list[str] | None = None,
-        expires_in_days: int | None = None,
+        scopes: Optional[List[str]] = None,
+        expires_in_days: Optional[int] = None,
     ) -> ApiKeyCreated:
         """Create a new API key.
 
@@ -33,7 +33,7 @@ class ApiKeys:
         data = self._client.request("POST", "/v1/api-keys", json=body)
         return ApiKeyCreated.model_validate(data)
 
-    def list(self) -> list[ApiKey]:
+    def list(self) -> List[ApiKey]:
         """List all API keys (masked)."""
         data = self._client.request("GET", "/v1/api-keys")
         if isinstance(data, dict):
@@ -49,8 +49,8 @@ class ApiKeys:
         self,
         key_id: str,
         *,
-        name: str | None = None,
-        scopes: list[str] | None = None,
+        name: Optional[str] = None,
+        scopes: Optional[List[str]] = None,
     ) -> ApiKey:
         """Update an API key."""
         body: dict[str, Any] = {}

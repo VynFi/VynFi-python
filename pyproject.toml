@@ -42,6 +42,12 @@ line-length = 100
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM"]
 
+[tool.ruff.lint.per-file-ignores]
+# These files define a list() method which shadows the builtin;
+# mypy needs typing.List to avoid interpreting list[str] as the method.
+"src/vynfi/resources/api_keys.py" = ["UP006", "UP035", "UP045"]
+"src/vynfi/resources/webhooks.py" = ["UP006", "UP035", "UP045"]
+
 [tool.mypy]
 python_version = "3.9"
 strict = true

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, List, Optional
 
 from .._client import SyncClient
 from .._types import Webhook, WebhookCreated
@@ -14,7 +14,7 @@ class Webhooks:
     def __init__(self, client: SyncClient) -> None:
         self._client = client
 
-    def create(self, *, url: str, events: list[str]) -> WebhookCreated:
+    def create(self, *, url: str, events: List[str]) -> WebhookCreated:
         """Create a new webhook.
 
         Args:
@@ -25,7 +25,7 @@ class Webhooks:
         data = self._client.request("POST", "/v1/webhooks", json={"url": url, "events": events})
         return WebhookCreated.model_validate(data)
 
-    def list(self) -> list[Webhook]:
+    def list(self) -> List[Webhook]:
         """List all webhooks."""
         data = self._client.request("GET", "/v1/webhooks")
         if isinstance(data, dict):
@@ -41,9 +41,9 @@ class Webhooks:
         self,
         webhook_id: str,
         *,
-        url: str | None = None,
-        events: list[str] | None = None,
-        status: str | None = None,
+        url: Optional[str] = None,
+        events: Optional[List[str]] = None,
+        status: Optional[str] = None,
     ) -> Webhook:
         """Update a webhook."""
         body: dict[str, Any] = {}
@@ -60,7 +60,6 @@ class Webhooks:
         """Delete a webhook."""
         self._client.request("DELETE", f"/v1/webhooks/{webhook_id}")
 
-    def test(self, webhook_id: str) -> dict[str, Any]:
+    def test(self, webhook_id: str) -> Any:
         """Send a test event to a webhook."""
-        data = self._client.request("POST", f"/v1/webhooks/{webhook_id}/test")
-        return data  # type: ignore[return-value]
+        return self._client.request("POST", f"/v1/webhooks/{webhook_id}/test")
