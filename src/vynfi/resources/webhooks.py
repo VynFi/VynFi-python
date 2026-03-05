@@ -28,8 +28,8 @@ class Webhooks:
     def list(self) -> list[Webhook]:
         """List all webhooks."""
         data = self._client.request("GET", "/v1/webhooks")
-        if isinstance(data, dict) and "webhooks" in data:
-            data = data["webhooks"]
+        if isinstance(data, dict):
+            data = data.get("webhooks") or data.get("data") or []
         return [Webhook.model_validate(w) for w in data]
 
     def get(self, webhook_id: str) -> Webhook:

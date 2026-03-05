@@ -20,8 +20,8 @@ class Billing:
     def invoices(self) -> list[Invoice]:
         """Get invoice history."""
         data = self._client.request("GET", "/v1/billing/invoices")
-        if isinstance(data, dict) and "invoices" in data:
-            data = data["invoices"]
+        if isinstance(data, dict):
+            data = data.get("invoices") or data.get("data") or []
         return [Invoice.model_validate(i) for i in data]
 
     def payment_method(self) -> PaymentMethod | None:

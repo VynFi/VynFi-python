@@ -17,8 +17,8 @@ class Catalog:
     def list_sectors(self) -> list[SectorSummary]:
         """List all available sectors."""
         data = self._client.request("GET", "/v1/sectors")
-        if isinstance(data, dict) and "sectors" in data:
-            data = data["sectors"]
+        if isinstance(data, dict):
+            data = data.get("sectors") or data.get("data") or []
         return [SectorSummary.model_validate(s) for s in data]
 
     def get_sector(self, slug: str) -> Sector:
@@ -42,8 +42,8 @@ class Catalog:
         if source:
             params["source"] = source
         data = self._client.request("GET", "/v1/catalog", params=params)
-        if isinstance(data, dict) and "items" in data:
-            data = data["items"]
+        if isinstance(data, dict):
+            data = data.get("items") or data.get("data") or []
         return [CatalogItem.model_validate(item) for item in data]
 
     def get_fingerprint(self, sector: str, profile: str) -> Fingerprint:

@@ -28,8 +28,8 @@ class Job(BaseModel):
     status: str
     tables: Any = None
     format: str = "json"
-    credits_reserved: int = 0
-    credits_used: int = 0
+    credits_reserved: int | None = 0
+    credits_used: int | None = 0
     sector_slug: str = ""
     progress: JobProgress | None = None
     output_path: str | None = None

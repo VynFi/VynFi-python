@@ -36,8 +36,8 @@ class ApiKeys:
     def list(self) -> list[ApiKey]:
         """List all API keys (masked)."""
         data = self._client.request("GET", "/v1/api-keys")
-        if isinstance(data, dict) and "keys" in data:
-            data = data["keys"]
+        if isinstance(data, dict):
+            data = data.get("keys") or data.get("data") or []
         return [ApiKey.model_validate(k) for k in data]
 
     def get(self, key_id: str) -> ApiKey:

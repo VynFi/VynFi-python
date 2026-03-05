@@ -76,7 +76,13 @@ class Jobs:
         data = self._client.request("GET", "/v1/jobs", params=params)
         if isinstance(data, list):
             return JobList(jobs=[Job.model_validate(j) for j in data])
-        return JobList.model_validate(data)
+        # API returns {"data": [...], "has_more": bool, "next_cursor": str|null}
+        items = data.get("jobs") or data.get("data") or []
+        return JobList(
+            jobs=[Job.model_validate(j) for j in items],
+            has_more=data.get("has_more", False),
+            next_cursor=data.get("next_cursor"),
+        )
 
     def get(self, job_id: str) -> Job:
         """Get a single job by ID."""
